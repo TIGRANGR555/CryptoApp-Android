@@ -47,9 +47,12 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
-      - name: Build APK with Buildozer
+      - name: Build APK with Auto-Accepted Licenses
+        env:
+          AUTO_ACCEPT_LICENSE: "y"
         run: |
-          buildozer -v android debug
+          # Force automatic acceptance of licenses via terminal piping
+          yes | buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
