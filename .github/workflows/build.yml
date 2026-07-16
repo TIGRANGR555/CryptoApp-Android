@@ -58,6 +58,12 @@ jobs:
           rm -rf ~/.buildozer
 
       - name: Build APK
+        env:
+          # Target only the Android NDK compilers, ignoring legacy header warnings
+          APP_CFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
+          APP_CPPFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
+          # Pass directly to python-for-android recipe compilations
+          p4a_extra_cflags: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
         run: |
           yes | buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
