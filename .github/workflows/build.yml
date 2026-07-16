@@ -53,11 +53,19 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
-      - name: Build APK
-        env:
-          AUTO_ACCEPT_LICENSE: "y"
+      - name: Auto-Accept Android SDK Licenses
         run: |
-          # Run the build. If it fails, output the logs!
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          # Create SDK licenses directory
+          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+          # Write accepted license hashes directly
+          echo -e "\n89b21d1b3e7781291d4d12b3c5376e72218614c9" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo -e "\n84831b9409646a918e30573bab4c9c91346d8ecf" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+
+      - name: Build APK
+        run: |
           buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
             find .buildozer/ -name "*.log" -type f -exec echo "--- {} ---" \; -exec tail -n 100 {} \;
