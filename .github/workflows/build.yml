@@ -38,7 +38,6 @@ jobs:
             pkg-config \
             zlib1g-dev \
             libncurses5-dev \
-            libgdbm-dev \
             libnss3-dev \
             libssl-dev \
             libreadline-dev \
@@ -53,9 +52,13 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
+      - name: Clean Cache Directories
+        run: |
+          rm -rf .buildozer
+          rm -rf ~/.buildozer
+
       - name: Build APK
         run: |
-          # Use yes to pipe interactive agreement down to Buildozer and its child SDK setups
           yes | buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
             find .buildozer/ -name "*.log" -type f -exec echo "--- {} ---" \; -exec tail -n 100 {} \;

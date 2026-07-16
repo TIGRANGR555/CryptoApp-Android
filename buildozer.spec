@@ -23,6 +23,9 @@ android.skip_update = False
 p4a.branch = develop
 
 # --- Pinning Stable SDK and Build Tools ---
-android.api = 34
+
+# --- Target Match SDK Configuration ---
+android.api = 33
 android.minapi = 21
-android.build_tools_version = 34.0.0
+android.build_tools_version = 33.0.2
+android.cmdline_tools_version = 11.0
