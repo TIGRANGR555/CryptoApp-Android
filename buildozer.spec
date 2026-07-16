@@ -19,3 +19,4 @@ android.archs = arm64-v8a
 log_level = 2
 warn_on_root = 0
 buildozer.num_workers = 1
+android.accept_sdk_license = True
