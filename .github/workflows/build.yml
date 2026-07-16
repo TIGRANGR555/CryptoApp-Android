@@ -53,20 +53,19 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
-      - name: Clear local cache directory
-        run: |
-          rm -rf .buildozer
-          rm -rf ~/.buildozer
-
       - name: Build APK
         env:
           AUTO_ACCEPT_LICENSE: "y"
         run: |
-          # distclean forces a totally pristine, clean compile of the distribution
-          buildozer android clean
-          yes | buildozer -v android debug
+          # Run the build. If it fails, output the logs!
+          buildozer -v android debug || {
+            echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
+            find .buildozer/ -name "*.log" -type f -exec echo "--- {} ---" \; -exec tail -n 100 {} \;
+            exit 1
+          }
 
       - name: Upload APK Artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: CryptoApp-APK
