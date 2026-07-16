@@ -13,6 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -27,7 +33,6 @@ jobs:
             git \
             zip \
             unzip \
-            openjdk-17-jdk \
             autoconf \
             libtool \
             pkg-config \
@@ -50,7 +55,6 @@ jobs:
 
       - name: Force Clean Build Cache
         run: |
-          # Wipe local and global buildozer structures to clear the broken cached SDK state
           rm -rf .buildozer
           rm -rf ~/.buildozer
 
