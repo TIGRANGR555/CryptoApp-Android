@@ -7,7 +7,8 @@ from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock
 from kivy.network.urlrequest import UrlRequest
-import json
+from kivy.utils import platform
+import certifi
 
 class CryptoTrackerApp(App):
     def build(self):
@@ -55,6 +56,9 @@ class CryptoTrackerApp(App):
         # UI Reference Dictionary to prevent widget rebuild crashes
         self.ui_references = {}
 
+        # Safe SSL context for Android
+        self.ca_file = certifi.where()
+
         self.update_headers()
         Clock.schedule_once(self.initialize_application, 0.5)
 
@@ -99,17 +103,14 @@ class CryptoTrackerApp(App):
                 self.matrix_pairs[f"{base}/{quote}"] = base_fixed / quote_fixed
 
     def rebuild_ui_layout_structures(self):
-        """Builds components safely once"""
         self.data_grid.clear_widgets()
         self.ui_references.clear()
 
         target_dataset = self.fixed_pairs.items() if self.current_tab == 'tab1' else self.matrix_pairs.items()
 
         for key, fixed_value in list(target_dataset):
-            # Col 1: Label
             self.data_grid.add_widget(Label(text=key, font_size="13sp", height=38, size_hint_y=None))
 
-            # Col 2: Stable, Non-wiped input
             txt_input = TextInput(text=f"{fixed_value:.4f}", multiline=False, input_filter='float',
                                   font_size="13sp", height=36, size_hint_y=None,
                                   background_color=(0.15, 0.15, 0.15, 1), foreground_color=(1, 1, 1, 1))
@@ -117,20 +118,17 @@ class CryptoTrackerApp(App):
             txt_input.bind(text=lambda instance, val: self.on_fixed_price_edit(instance._row_key, val))
             self.data_grid.add_widget(txt_input)
 
-            # Col 3 & 4: Labels we can manipulate directly via references
             live_label = Label(text="Loading...", font_size="13sp", height=38, size_hint_y=None)
             change_label = Label(text="0.00%", font_size="13sp", height=38, size_hint_y=None, markup=True)
 
             self.data_grid.add_widget(live_label)
             self.data_grid.add_widget(change_label)
 
-            # Col 5: Remove Button
             rem_btn = Button(text="X", font_size="12sp", height=34, size_hint_y=None, background_color=(0.8, 0.2, 0.2, 1))
             rem_btn._row_key = key
             rem_btn.bind(on_press=lambda instance: self.remove_coin_completely(instance._row_key))
             self.data_grid.add_widget(rem_btn)
 
-            # Store pointers to modify text blocks dynamically
             self.ui_references[key] = {"live": live_label, "change": change_label}
 
         self.refresh_live_data_only(0)
@@ -145,12 +143,13 @@ class CryptoTrackerApp(App):
 
         url = f"https://api.binance.com/api/v3/ticker/price?symbol={target_pair}"
         
-        # Async HTTP Request
+        # Async SSL Secured request
         UrlRequest(
             url,
             on_success=lambda req, result, coin=input_coin, pair=target_pair: self.on_add_coin_success(result, coin, pair),
             on_error=lambda req, err: None,
             on_failure=lambda req, result: None,
+            ca_file=self.ca_file,
             timeout=5
         )
 
@@ -187,13 +186,13 @@ class CryptoTrackerApp(App):
             pass
 
     def refresh_live_data_only(self, dt):
-        """Fetches live prices asynchronously to prevent blocking the main thread"""
         url = "https://api.binance.com/api/v3/ticker/price"
         UrlRequest(
             url,
             on_success=self.on_prices_fetch_success,
             on_error=lambda req, err: None,
             on_failure=lambda req, result: None,
+            ca_file=self.ca_file,
             timeout=4
         )
 
