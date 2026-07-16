@@ -50,7 +50,6 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          # Force setuptools to compatible version and lock Cython below 3.0
           pip install "setuptools<66" "cython<3.0" virtualenv buildozer
 
       - name: Clean Cache Directories
@@ -59,9 +58,6 @@ jobs:
           rm -rf ~/.buildozer
 
       - name: Build APK
-        env:
-          CFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
-          CXXFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
         run: |
           yes | buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
