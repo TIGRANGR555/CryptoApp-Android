@@ -5,7 +5,7 @@ package.domain = org.test
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
-requirements = python3,kivy
+requirements = python3,kivy,sqlite3,zlib
 
 # Icon and splash screen (optional)
 # icon.filename = %(source.dir)s/icon.png
