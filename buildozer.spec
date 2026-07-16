@@ -5,7 +5,6 @@ package.domain = org.test
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
-requirements = python3,kivy
 
 orientation = portrait
 fullscreen = 0
@@ -19,6 +18,10 @@ android.archs = arm64-v8a
 log_level = 2
 warn_on_root = 0
 buildozer.num_workers = 1
-p4a.branch = develop
+
+# --- Applied Build Bug Fixes ---
+requirements = python3,kivy
+android.permissions = INTERNET, ACCESS_NETWORK_STATE
 android.accept_sdk_license = True
 android.skip_update = False
+p4a.branch = develop
