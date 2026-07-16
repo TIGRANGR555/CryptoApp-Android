@@ -53,11 +53,16 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
+      - name: Pre-accept Android SDK Licenses
+        run: |
+          # Create Android home and accept licenses globally on the runner
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          
+          # Accept licenses using standard system tooling
+          yes | sdkmanager --licenses || true
+
       - name: Build APK
-        env:
-          AUTO_ACCEPT_LICENSE: "y"
-          # This forces the Android SDK manager to auto-accept licenses programmatically
-          ANDROID_LICENSES_AUTO_ACCEPT: "yes"
         run: |
           buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
