@@ -40,18 +40,24 @@ jobs:
             libsqlite3-dev \
             sqlite3 \
             bzip2 \
-            libbz2-dev
+            libbz2-dev \
+            libstdc++6
 
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
+      - name: Force Clean Build Cache
+        run: |
+          # Wipe local and global buildozer structures to clear the broken cached SDK state
+          rm -rf .buildozer
+          rm -rf ~/.buildozer
+
       - name: Build APK with Auto-Accepted Licenses
         env:
           AUTO_ACCEPT_LICENSE: "y"
         run: |
-          # Force automatic acceptance of licenses via terminal piping
           yes | buildozer -v android debug
 
       - name: Upload APK Artifact
