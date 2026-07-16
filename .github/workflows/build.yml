@@ -58,6 +58,10 @@ jobs:
           rm -rf ~/.buildozer
 
       - name: Build APK
+        env:
+          # Force the compiler to ignore legacy C warnings instead of crashing
+          CFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
+          CXXFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types"
         run: |
           yes | buildozer -v android debug || {
             echo "=== BUILD FAILED! PRINTING RECENT LOG FILES ==="
