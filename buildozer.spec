@@ -30,6 +30,8 @@ android.permissions = INTERNET, ACCESS_NETWORK_STATE
 
 # Build options
 p4a.branch = develop
+p4a.bootstrap = sdl2
+p4a.source_dir = 
 
 [buildozer]
 log_level = 2
