@@ -16,7 +16,7 @@ warn_on_root = 0
 buildozer.num_workers = 1
 
 # --- Applied Build Bug Fixes ---
-requirements = python3,kivy
+requirements = python3,kivy,pillow
 android.permissions = INTERNET, ACCESS_NETWORK_STATE
 android.accept_sdk_license = True
 android.skip_update = False
