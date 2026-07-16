@@ -50,7 +50,8 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install buildozer cython virtualenv
+          # Force setuptools to compatible version and lock Cython below 3.0
+          pip install "setuptools<66" "cython<3.0" virtualenv buildozer
 
       - name: Clean Cache Directories
         run: |
